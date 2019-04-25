@@ -112,6 +112,7 @@ SCRIPT
     m1.vm.network :private_network, ip: "192.168.0.12"
     m1.vm.provider :virtualbox do |vb|
       vb.memory = "3072"
+    m1.vm.provision "shell", inline: "yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm"
     end
   end
 

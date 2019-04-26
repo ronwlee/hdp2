@@ -9,7 +9,7 @@ grep 'temporary' /var/log/mysqld.log
 
 mysql -u root -p
 
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'Newhakase-labs123@';
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Hadoop1234!';
 flush privileges;
 
 yum install mysql-connector-java.noarch
@@ -26,4 +26,4 @@ yum install mysql-connector-java.noarch
 /usr/share/maven-fragments/mysql-connector-java
 /usr/share/maven-poms/JPP-mysql-connector-java.pom
 
-
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar

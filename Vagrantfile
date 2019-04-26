@@ -37,6 +37,21 @@ Vagrant.configure(2) do |config|
   sudo cat /vagrant/id_rsa.pub >> /root/.ssh/authorized_keys
 SCRIPT
   
+$ambari =<<SCRIPT
+wget -P /etc/yum.repos.d http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.3.0/ambari.repo
+yum -y install mysql-connector-java.noarch
+yum -y install ambari-server
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
+SCRIPT
+
+$mysql =<<SCRIPT
+yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+yum -y install mysql-community-server
+systemctl start mysqld
+systemctl enable mysqld
+yum -y install mysql-connector-java.noarch
+SCRIPT
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -100,6 +115,7 @@ SCRIPT
     a1.vm.network :private_network, ip: "192.168.0.11"
     a1.vm.provider :virtualbox do |vb|
       vb.memory = "3072"
+    a1.vm.provision "shell", inline: $ambari
     end
 
     a1.vm.network "forwarded_port", guest: 8080, host: 8080
@@ -112,7 +128,7 @@ SCRIPT
     m1.vm.network :private_network, ip: "192.168.0.12"
     m1.vm.provider :virtualbox do |vb|
       vb.memory = "3072"
-    m1.vm.provision "shell", inline: "yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm"
+    m1.vm.provision "shell", inline: $mysql
     end
   end
 
